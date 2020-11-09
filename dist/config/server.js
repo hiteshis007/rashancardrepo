@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = __importDefault(require("http"));
 const express_1 = __importDefault(require("../config/express"));
 const logger_1 = __importDefault(require("../config/logger"));
-const port = process.env.port;
+const port = process.env.PORT || 8001;
 express_1.default.set('port', port);
 const s = http_1.default.createServer(express_1.default);
 s.listen(port);
