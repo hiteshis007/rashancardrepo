@@ -1,0 +1,35 @@
+{
+  "name": "rashan_card_app",
+  "version": "1.0.0",
+  "description": "For rashan card seeding with aadhar card....",
+  "main": "server.js",
+  "scripts": {
+    "build": "tsc -p src/config",
+    "start": "nodemon dist/config/server.js",
+    "start-pro": "SET NODE_ENV=production & node dist/config/server.js > server.log",
+    "start-dev": "SET NODE_ENV=development & node dist/config/server.js",
+    "served": "npm run build & npm run start-dev",
+    "servep": "npm run build & npm run start-pro"
+  },
+  "keywords": [],
+  "author": "Hitesh",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.5",
+    "dateformat": "^3.0.3",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "express-validator": "^6.6.1",
+    "mongoose": "^5.10.9",
+    "multer": "^1.4.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.8",
+    "@types/express-session": "^1.17.0",
+    "@types/lodash": "^4.14.71",
+    "@types/node": "^8.0.17"
+  }
+}
