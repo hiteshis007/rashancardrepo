@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run tsc -p src/config",
     "build-d": "tsc -p src/config",
-    "start": "SET NODE_ENV=development & node dist/config/server.js",
+    "start": "NODE_ENV=development node dist/config/server.js",
     "start-pro": "SET NODE_ENV=production & node dist/config/server.js > server.log",
     "start-dev": "SET NODE_ENV=development & node dist/config/server.js",
     "served": "npm run build-d & npm run start-dev",
