@@ -2,7 +2,7 @@ import http from "http";
 import Express from "../config/express"
 import logger from "../config/logger";
 
-const port = process.env.port || 8001;
+const port = process.env.PORT || 8001;
 Express.set('port', port);
 
 const s = http.createServer(Express);
