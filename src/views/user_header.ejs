@@ -1,0 +1,37 @@
+    <div class="ui first right sidebar vertical overlay menu">
+      <a class="item" href="/rc/profile" style="background: #fbbd08a3;box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.3);">
+        <img class="ui circular tiny image centered" src="/<%= user.profilePic%>">
+        <%= user.name%>
+      </a>
+      <a class="item <%= locals.selected=='search'?'selected':'' %>" href="/rc/search">Search</a>
+      <a class="item <%= locals.selected=='list'?'selected':'' %>" href="/rc/list">User RC List</a>
+      <a class="item <%= locals.selected=='update'?'selected':'' %>" href="/rc/update">Update</a>
+      <a class="item logout_view_open">Logout</a>
+    </div>
+
+    <div class="ui top fixed borderless main menu pointing">
+      <div class="ui container">
+
+        <a class="header item" style="padding: 0px;">
+          <img class="logo" src="/logo.png">
+        </a>
+
+        <a class="toc1 right item" style="color: white;font-size: x-large;">
+          <i class="sidebar icon"></i>
+        </a>
+        <!-- side bar contain..here -->
+
+
+        <div class="ui mini modal logout_model">
+          <div class="header">Logout</div>
+          <div class="content">
+            <p>Do you want to logout !!!</p>
+          </div>
+          <div class="actions">
+            <a class="ui logout primary button" href="/logout">Logout</a>
+            <div class="ui cancel red button">Cancel</div>
+          </div>
+        </div>
+      
+      </div>
+    </div>

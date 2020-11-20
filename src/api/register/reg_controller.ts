@@ -1,6 +1,7 @@
 import {Request, Response} from 'express';
 import fs from 'fs';
 
+import validation from '../../config/validator';
 import RegModel from './reg_model';
 import LoginModel from './login_model';
 import logger from '../../config/logger';
@@ -9,11 +10,11 @@ import logger from '../../config/logger';
 
 export default class RegisterController {
     
-    public static async isUserRegistered(email){
+    public static async isUserRegistered(mobile){
 
         try {
             
-            let result = await RegModel.findOne({email:email}).exec();
+            let result = await RegModel.findOne({mobile:mobile}).exec();
             if(result) return result;
             else return undefined;
 
@@ -24,76 +25,76 @@ export default class RegisterController {
     }
     
     public static registerView(req:Request, res:Response){
-        res.render('clientRegister', {client:new RegModel()});
+        res.render('register', {user:new RegModel()});
     }
 
-    // public static async register(req, res:Response){
+    public static async register(req, res:Response){
 
-    //     let regModel;
-    //     try {
+        let regModel;
+        try {
 
-    //         regModel = new RegModel(req.body);
-    //         if(req.files.length>0) regModel['profilePic']=req.files[0].filename;
+            regModel = new RegModel(req.body);
+            if(req.files.length>0) regModel['profilePic']=req.files[0].filename;
         
-    //         let vErrors = validation(req);
-    //         if(vErrors.isEmpty()){
+            let vErrors = validation(req);
+            if(vErrors.isEmpty()){
 
-    //             logger.log('register : ', regModel);
-    //             let result = await regModel.save();
-    //             logger.log('register : ', 'User saved successfully !!');
-    //             res.redirect('/login');
+                logger.log('register : ', regModel);
+                let result = await regModel.save();
+                logger.log('register : ', 'User saved successfully !!');
+                res.redirect('/home');
             
-    //         } else {
+            } else {
 
-    //             logger.info('register : ',vErrors.mapped());
-    //             if(regModel.profilePic) fs.unlinkSync('src/public/'+regModel.profilePic);
-    //             res.render('clientRegister', {client:regModel, error:vErrors.mapped()});
+                logger.info('register : ',vErrors.mapped());
+                if(regModel.profilePic) fs.unlinkSync('src/public/'+regModel.profilePic);
+                res.render('register', {user:regModel, error:vErrors.mapped()});
 
-    //         }
+            }
             
-    //     } catch (error) {
+        } catch (error) {
 
-    //         logger.info('register : ', error);
-    //         if(regModel.profilePic) fs.unlinkSync('src/public/'+regModel.profilePic);
-    //         res.render('clientRegister', {error:{error:'Could not register user! Some server side error occurred!!'}});
+            logger.info('register : ', error);
+            if(regModel.profilePic) fs.unlinkSync('src/public/'+regModel.profilePic);
+            res.render('register', {user:new RegModel(), error:{error:'Could not register user! Some server side error occurred!!'}});
 
-    //     }
+        }
     
-    // }
+    }
 
     public static loginView(req:Request, res:Response){
-        res.render('clientLogin', {email:''});
+        res.render('login', {mobile:''});
     }
 
-    // public static async login(req:Request, res:Response){
+    public static async login(req:Request, res:Response){
 
-    //     try {
+        try {
             
-    //         let loginModel=new LoginModel(req.body);
+            let loginModel=new LoginModel(req.body);
             
-    //         let vErrors = validation(req);
-    //         if(vErrors.isEmpty()){
+            let vErrors = validation(req);
+            if(vErrors.isEmpty()){
 
-    //             logger.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    //             logger.log('login by : ', loginModel.email);
-    //             req.session.user = await RegModel.findOne({email:loginModel.email}).exec();
-    //             res.redirect('/emp/list');
+                logger.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+                logger.log('login by : ', loginModel.mobile);
+                req.session.user = await RegModel.findOne({mobile:loginModel.mobile}).exec();
+                res.redirect('/rc/search');
 
-    //         } else{
+            } else{
                 
-    //             logger.log('login : ',vErrors.mapped());
-    //             res.render('clientLogin', {email: loginModel.email, error:vErrors.mapped()});
+                logger.log('login : ',vErrors.mapped());
+                res.render('login', {mobile: loginModel.mobile, error:vErrors.mapped()});
             
-    //         }
+            }
 
-    //     } catch (error) {
+        } catch (error) {
 
-    //         logger.log('login : ',error);
-    //         res.render('clientLogin', {error:{error:'Could not login ! Some server side error occurred !!'}});
+            logger.log('login : ',error);
+            res.render('login', {mobile:'', error:{error:'Could not login ! Some server side error occurred !!'}});
             
-    //     }
+        }
         
-    // }
+    }
 
     public static async logout(req:Request, res:Response){
 
@@ -103,10 +104,10 @@ export default class RegisterController {
             logger.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
             delete res.locals.user;
             await req.session.destroy(function(err) {});
-            res.redirect('/login');
+            res.redirect('/home');
 
         } catch (error) {
-            res.redirect('/login');
+            res.redirect('/home');
         }
         
     }

@@ -2,20 +2,10 @@
 import {Schema, model} from 'mongoose';
 
 const schema=new Schema({
-    fname:{
+    name:{
         type:String
     },
-    lname:{
-        type:String
-    },
-    email:{
-        type:String,
-        unique:true
-    },
-    phone:{
-        type:String
-    },
-    gender:{
+    mobile:{
         type:String
     },
     profilePic:{
@@ -28,6 +18,10 @@ const schema=new Schema({
         type:String
     }
 
-});
+},
+{
+  timestamps: true
+}
+);
 
-export default new model('Register', schema);
+export default model('Register', schema);

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!-- saved from url=(0046)https://semantic-ui.com/examples/homepage.html -->
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+    <title>Register</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+
+    <link rel="stylesheet" href="/css/menu.css"/>
+    <script src="/js/menu.js"></script>
+
+    <style type="text/css">
+
+      .grid{
+          width: 80%!important;
+          height: 100%; 
+      }
+      @media only screen and (max-device-width: 700px) {
+        .grid{
+            width: auto !important;
+        }
+      }
+      
+      /* Page specific css */
+      .cstm-img{
+          box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+          width: 250px;
+          height: 250px;
+          border: 5px solid white;
+          border-radius: 500rem;
+      }
+
+
+    </style>
+
+  </head>
+  <body class="pushable">
+
+    <%- include('home_header', {selected: 'home'}); %>
+
+    <div class="pusher">
+
+      <div class="ui middle aligned center grid" >
+        
+        <div class="row" >
+          <form class="ui form <%= locals.error? 'error':'' %>" action="/register" method="POST" enctype="multipart/form-data">
+            <div class="ui segments">
+              <div class="ui secondary segment">
+                <h1 style="text-align: center;color: #b35718;">Register</h1>
+              </div>
+              <div class="ui segment">
+                <div class="ui stackable two column grid">
+                  <div class="column middle aligned center ">
+                    <div class="field <%= (locals.error && error.profilePic)? 'error':'' %>">
+                      <input type="file" name="profilePic" id='file' style="display: none;" onchange="document.getElementById('img').src = window.URL.createObjectURL(this.files[0])" multiple>
+                      <label for="file" style="text-align: center;">
+                          <img class="cstm-img" id='img' src="/default-img.png">
+                      </label>
+                      <%if(locals.error && error.profilePic){%> <div class="ui pointing red basic label"><%= error.profilePic %></div><%}%>
+                    </div>
+                  </div>
+                  <div class="column middle aligned center ">
+                    <div class="field <%= (locals.error && error.mobile)? 'error':'' %>">
+                      <div class="ui left icon large input">
+                          <i class="user icon"></i>
+                          <input type="text" name="mobile" placeholder="Mobile number" value='<%= user.mobile %>'>
+                      </div>
+                      <%if(locals.error && error.mobile){%> <div class="ui pointing red basic label"><%= error.mobile %></div><%}%>
+                    </div>
+                    <div class="field <%= (locals.error && error.name)? 'error':'' %>">
+                      <div class="ui left icon large input">
+                          <i class="lock icon"></i>
+                          <input type="text" name="name" placeholder="Name"   value='<%= user.name %>'>
+                      </div>
+                      <%if(locals.error && error.name){%> <div class="ui pointing red basic label"><%= error.name %></div><%}%>
+                    </div>
+                  </div>
+                </div>
+                <div class="ui stackable grid">
+                  <div class="column">
+                    <div class="field <%= (locals.error && error.password)? 'error':'' %>">
+                      <div class="ui left icon large input">
+                          <i class="lock icon"></i>
+                          <input type="password" name="password" placeholder="Password">
+                      </div>
+                      <%if(locals.error && error.password){%> <div class="ui pointing red basic label"><%= error.password %></div><%}%>
+                    </div>
+                    <div class="field <%= (locals.error && error.rePassword)? 'error':'' %>">
+                      <div class="ui left icon large input">
+                          <i class="lock icon"></i>
+                          <input type="password" name="rePassword" placeholder="Re-password">
+                      </div>
+                      <%if(locals.error && error.rePassword){%> <div class="ui pointing red basic label"><%= error.rePassword %></div><%}%>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ui secondary clearing segment">
+                <div class="ui right floated buttons">
+                  <a class="ui button negative" href="/home">Cancel</a>
+                  <div class="or"></div>
+                  <button class="ui positive button">Register</button>
+                </div>
+              </div>
+              <div class="ui secondary segment">
+                <i class="warning icon"></i>
+                <span>Already registered ? </span>
+                <a href="/login">Login</a>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+      <div class="ui  inverted dimmer">
+        <!-- active -->
+        <div class="ui text loader">Loading</div>
+      </div>
+
+    </div>
+
+
+    <script>
+      $( document ).ready(function() {
+          $("input, select").change(function(){
+              $(this).closest('.field').find('.label').remove();
+              $(this).closest('.field').removeClass('error');
+          });
+          
+      });
+    </script>
+
+  </body>
+</html>

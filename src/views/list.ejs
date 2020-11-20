@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+    <title>List</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
+
+    <link rel="stylesheet" href="/css/menu.css"/>
+    <script src="/js/menu.js"></script>
+
+    <style type="text/css">
+
+      
+      
+      
+    </style>
+
+    <script>
+      $(document).ready(function () {
+
+        var table = $('#rctable').DataTable({
+            paging:   false,
+            info: false,
+            fixedHeader: true,
+            columns: [
+                {"data": "sno"},
+                {"data": "rasncrdno"},
+                {"data": "cardtyp"},
+                {"data": "applicantnm"},
+                {"data": "fathernm"},
+                {"data": "noffamilymember"},
+                {"data": "mobile"},
+                {"data": "addr"},
+                {"data": "status"}
+            ]
+          });
+
+        $('.active').click();
+        
+        $('.pagination a').click(function (e) { 
+
+          e.preventDefault();
+          console.log($(this).html());
+
+
+          $('.pagination a').removeClass('active');
+          $(this).addClass('active');
+
+          $.ajax({
+            url: '/rc/list',
+            method: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({'paging':$(this).html()})
+          }).done(function (result){
+              
+            console.log(result.data[0]);
+            if(result.status == 200) {
+              
+              table.clear().draw();
+              table.rows.add(result.data).draw();
+            
+            }else console.log("No data found");
+                  
+          }).fail(function (xhr, status) {
+
+            console.log(status);
+              
+          });
+
+        });
+
+      });
+    </script>
+  </head>
+  <body class="pushable">
+
+    <%- include('user_header', {selected: 'list'}); %>
+
+    <div class="pusher">
+      <table id='rctable' class="ui celled padded table" style="width:100%">
+        <thead class="ui top fixed menu" style="margin-top: 80px;">
+            <th>SN</th>
+            <th>Ration Card Number</th>
+            <th>Card Type</th>
+            <th>Applicant Name</th>
+            <th>Father Name</th>
+            <th>Members</th>
+            <th>Mobile</th>
+            <th>Address</th>
+            <th>Status</th>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    
+    
+    </div>
+
+    <div class="ui bottom fixed inverted pagination menu">
+      <a class="active red item">1</a>
+        <a class="red item">2</a>
+        <a class="red item">3</a>
+        <a class="red item">4</a>
+        <a class="red item">5</a>
+        <a class="red item">6</a>
+        <a class="red item">7</a>
+        <a class="red item">8</a>
+        <a class="red item">9</a>
+        <a class="red item">10</a>
+    </div>
+
+    <div class="ui  inverted dimmer">
+      <!-- active -->
+      <div class="ui text loader">Loading</div>
+    </div>
+  
+  </body>
+</html>

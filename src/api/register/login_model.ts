@@ -2,7 +2,7 @@
 import {Schema, model} from 'mongoose';
 
 const schema= new Schema({
-    email:String,
+    mobile:String,
     password:String
 });
 

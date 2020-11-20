@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+    <title>Search</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+
+    <link rel="stylesheet" href="/css/menu.css"/>
+    <script src="/js/menu.js"></script>
+
+    <style type="text/css">
+
+      .segment{
+          width: 70%;
+          margin: auto !important;
+      }
+
+      @media only screen and (max-device-width: 700px) {
+        .segment{
+          width: auto !important;
+        }
+      }
+      
+      
+    </style>
+
+    <script>
+      $(document).ready(function () {
+        
+        $('form button').click(function (e) { 
+            $('.ui.dimmer').dimmer('show');
+        }); 
+        
+
+      });
+    </script>
+  </head>
+  <body class="pushable">
+
+    <%- include('user_header', {selected: 'search'}); %>
+
+    <div class="pusher">
+      <div class="ui placeholder segment">
+
+        <%if(locals.error && !(error instanceof Object)){%>
+          <div class="ui negative message">
+            <div class="header"><%=error%></div>
+          </div>
+        <%}%>
+
+        <div class="ui stackable center aligned grid">
+          
+          <div class="column">
+
+            <div class="ui icon header">
+              <i class="search icon"></i>
+              Find Your Rashan Card
+            </div>
+
+            <form action="/rc/search" method="post" enctype="application/json" >
+              <div class="ui search">
+                <div class="ui icon input" style="width: 100%;font-size: 18px;">
+                  <input class="prompt" type="text" name="rcId" placeholder="Rashan card number..." value="<%=locals.rcId?rcId:''%>">
+                  <i class="search icon"></i>
+                </div>
+                <%if(locals.error && error instanceof Object){%> <div class="ui pointing red basic label"><%= error.rcId %></div><%}%>
+              </div>
+              <button class="ui huge primary button" style="margin-top: 10px;margin-bottom: 10px;">
+                Get it <i class="right arrow icon"></i>
+              </button>
+            </form>
+            
+            <%if(locals.rc){%>
+              <div class="results">
+                <div class="ui centered card" style="width: auto !important;">
+                  <div class="content">
+                    <div class="header">Rashan card </div>
+                  </div>
+                  <div class="content" style="font-size: 20px;">
+                    <h4 class="ui sub header"><%=rc.applicantnm%></h4>
+                    <div class="ui">
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                            <a><%=rc.fathernm%></a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                            <%=rc.rasncrdno%>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                            <%=rc.cardtyp%>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                            <%=rc.noffamilymember%>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                            <%=rc.mobile%>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                            <%=rc.addr%>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                            <%=rc.status%>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <%}%>
+            
+          </div>
+        
+        </div>
+      
+      </div>
+    </div>
+
+    <div class="ui  inverted dimmer">
+      <!-- active -->
+      <div class="ui text loader">Loading</div>
+    </div>
+  
+  </body>
+</html>
