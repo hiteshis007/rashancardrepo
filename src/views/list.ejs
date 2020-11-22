@@ -21,7 +21,18 @@
 
     <style type="text/css">
 
-      
+      .pagination{
+        border: 1px solid #dddddd !important;
+        background: #f9fafb !important;
+      }
+
+      .pagination .item{
+        color: #333333 !important;
+        font-weight: bold !important;
+      }
+
+      #rctable_wrapper{background: #f9fafb !important;}
+      .dataTables_scrollHeadInner .table{border-right: 0px;}
       
       
     </style>
@@ -30,9 +41,11 @@
       $(document).ready(function () {
 
         var table = $('#rctable').DataTable({
+            scrollY:$('.pushable'). height()-130,
+            scrollCollapse: true,
+            
             paging:   false,
             info: false,
-            fixedHeader: true,
             columns: [
                 {"data": "sno"},
                 {"data": "rasncrdno"},
@@ -61,14 +74,21 @@
             url: '/rc/list',
             method: 'post',
             contentType: 'application/json',
-            data: JSON.stringify({'paging':$(this).html()})
+            data: JSON.stringify({'paging':$(this).html()}),
+            beforeSend: function( xhr ) {
+              $('.ui.dimmer').dimmer('show');
+            }
           }).done(function (result){
               
             console.log(result.data[0]);
             if(result.status == 200) {
+
+              $('.ui.dimmer').dimmer('hide');
               
               table.clear().draw();
               table.rows.add(result.data).draw();
+
+              
             
             }else console.log("No data found");
                   
@@ -80,6 +100,8 @@
 
         });
 
+        $('.pagination .active').trigger('click');
+
       });
     </script>
   </head>
@@ -89,7 +111,7 @@
 
     <div class="pusher">
       <table id='rctable' class="ui celled padded table" style="width:100%">
-        <thead class="ui top fixed menu" style="margin-top: 80px;">
+        <thead>
             <th>SN</th>
             <th>Ration Card Number</th>
             <th>Card Type</th>
