@@ -133,6 +133,10 @@
               $(this).closest('.field').find('.label').remove();
               $(this).closest('.field').removeClass('error');
           });
+
+          $('form button').click(function (e) { 
+            $('.ui.dimmer').dimmer('show');
+        });   
           
       });
     </script>
