@@ -34,12 +34,17 @@ export default class RegisterController {
         try {
 
             regModel = new RegModel(req.body);
-            if(req.files.length>0) regModel['profilePic']=req.files[0].filename;
-        
+            if(req.files.length>0){
+                let bs = "data:"+req.files[0].mimetype+";base64, "+req.files[0].buffer.toString('base64');
+                regModel.profilePic.data=bs;
+                regModel.profilePic.contentType=req.files[0].mimetype;
+            }
+            logger.log(req.files[0])
+
             let vErrors = validation(req);
             if(vErrors.isEmpty()){
 
-                logger.log('register : ', regModel);
+                //logger.log('register : ', regModel);
                 let result = await regModel.save();
                 logger.log('register : ', 'User saved successfully !!');
                 res.redirect('/home');
@@ -47,15 +52,13 @@ export default class RegisterController {
             } else {
 
                 logger.info('register : ',vErrors.mapped());
-                if(regModel.profilePic) fs.unlinkSync('src/public/'+regModel.profilePic);
                 res.render('register', {user:regModel, error:vErrors.mapped()});
 
             }
             
         } catch (error) {
 
-            logger.info('register : ', error);
-            if(regModel.profilePic) fs.unlinkSync('src/public/'+regModel.profilePic);
+            logger.info('register catch : ', error);
             res.render('register', {user:new RegModel(), error:{error:'Could not register user! Some server side error occurred!!'}});
 
         }

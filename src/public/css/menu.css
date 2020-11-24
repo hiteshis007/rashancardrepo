@@ -20,7 +20,7 @@ body.pushable>.pusher {
     height: fit-content !important;
 }
 .ui.fixed{
-    font-size: 15px;
+    /* font-size: 15px; */
     box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
     background: #b35718;
 }
@@ -32,7 +32,7 @@ body.pushable>.pusher {
 }
 .ui.vertical.menu .item{
     color: white!important;
-    font-size: 22px;
+    /* font-size: 22px; */
 }
 .sidebar{
     text-align: center;
@@ -46,9 +46,9 @@ body.pushable>.pusher {
     .grid{
         width: auto !important;
     }
-    .ui.vertical.menu{font-size: 15px!important;}
-    *:not(.icon){font-size: 20px !important;}
-    h1{font-size: 2rem !important;}
+    /* .ui.vertical.menu{font-size: 15px!important;} 
+    *:not(.icon){font-size: 16px !important;}
+    h1{font-size: 2rem !important;}*/
 }
 
 .toc1.home{display: none!important;}

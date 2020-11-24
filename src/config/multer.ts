@@ -15,8 +15,13 @@ class Multer {
                 callBack(null, file.filename);
             }
         });
-        this.multer_setting=multer({ dest: 'src/public/' })
+
+        var storage = multer.memoryStorage();
+        
+        //this.multer_setting=multer({ dest: 'src/public/' })
         //this.multer_setting=multer(multer_storage);
+        this.multer_setting = multer({ storage: storage });
+        
     }
 }
 

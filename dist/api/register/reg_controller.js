@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs_1 = __importDefault(require("fs"));
 const validator_1 = __importDefault(require("../../config/validator"));
 const reg_model_1 = __importDefault(require("./reg_model"));
 const login_model_1 = __importDefault(require("./login_model"));
@@ -40,26 +39,26 @@ class RegisterController {
             let regModel;
             try {
                 regModel = new reg_model_1.default(req.body);
-                if (req.files.length > 0)
-                    regModel['profilePic'] = req.files[0].filename;
+                if (req.files.length > 0) {
+                    let bs = "data:" + req.files[0].mimetype + ";base64, " + req.files[0].buffer.toString('base64');
+                    regModel.profilePic.data = bs;
+                    regModel.profilePic.contentType = req.files[0].mimetype;
+                }
+                logger_1.default.log(req.files[0]);
                 let vErrors = validator_1.default(req);
                 if (vErrors.isEmpty()) {
-                    logger_1.default.log('register : ', regModel);
+                    //logger.log('register : ', regModel);
                     let result = yield regModel.save();
                     logger_1.default.log('register : ', 'User saved successfully !!');
                     res.redirect('/home');
                 }
                 else {
                     logger_1.default.info('register : ', vErrors.mapped());
-                    if (regModel.profilePic)
-                        fs_1.default.unlinkSync('src/public/' + regModel.profilePic);
                     res.render('register', { user: regModel, error: vErrors.mapped() });
                 }
             }
             catch (error) {
-                logger_1.default.info('register : ', error);
-                if (regModel.profilePic)
-                    fs_1.default.unlinkSync('src/public/' + regModel.profilePic);
+                logger_1.default.info('register catch : ', error);
                 res.render('register', { user: new reg_model_1.default(), error: { error: 'Could not register user! Some server side error occurred!!' } });
             }
         });

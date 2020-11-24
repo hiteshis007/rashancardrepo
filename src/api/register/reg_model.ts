@@ -9,7 +9,8 @@ const schema=new Schema({
         type:String
     },
     profilePic:{
-        type:String
+        data: String, 
+        contentType: String 
     },
     password:{
         type:String

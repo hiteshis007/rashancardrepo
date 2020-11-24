@@ -1,6 +1,6 @@
     <div class="ui first right sidebar vertical overlay menu">
       <a class="item" href="/rc/profile" style="background: #fbbd08a3;box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.3);">
-        <img class="ui circular tiny image centered" src="/<%= user.profilePic%>">
+        <img class="ui circular tiny image centered" src="<%=user.profilePic.data%>" onerror="this.src='/noimg.png'">
         <%= user.name%>
       </a>
       <a class="item <%= locals.selected=='search'?'selected':'' %>" href="/rc/search">Search</a>

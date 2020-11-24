@@ -9,7 +9,8 @@ const schema = new mongoose_1.Schema({
         type: String
     },
     profilePic: {
-        type: String
+        data: String,
+        contentType: String
     },
     password: {
         type: String

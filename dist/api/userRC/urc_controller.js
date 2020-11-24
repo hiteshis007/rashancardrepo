@@ -97,8 +97,9 @@ class RCController {
                         res.render('update', { rc: rc });
                     }
                     else {
-                        logger_1.default.log('searchForUpdate : ', 'RC not found !');
-                        res.render('update', { rcId: rcNo, rc: new rc_model_1.default(), error: 'Rashan card details not found !' });
+                        let rr = new rc_model_1.default();
+                        logger_1.default.log('searchForUpdate : ', 'RC not found !', rr);
+                        res.render('update', { rcId: rcNo, rc: rr, error: 'Rashan card details not found !' });
                     }
                 }
                 else {

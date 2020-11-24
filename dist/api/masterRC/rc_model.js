@@ -30,7 +30,8 @@ const schema = new mongoose_1.Schema({
         type: String
     },
     status: {
-        type: String
+        type: String,
+        default: ''
     }
 });
 exports.default = mongoose_1.model('Rashancard', schema);

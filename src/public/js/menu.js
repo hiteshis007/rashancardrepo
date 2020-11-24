@@ -10,5 +10,11 @@ $(document).ready(function () {
         
     $('.dropdown').dropdown();
 
+    $("input, select").change(function(){
+        $(this).closest('.field').find('.label').remove();
+        $(this).closest('.search').find('.label').remove();
+        $(this).closest('.field').removeClass('error');
+    });
+
 });
 

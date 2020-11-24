@@ -7,14 +7,13 @@
 
     <title>List</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
+    
 
     <link rel="stylesheet" href="/css/menu.css"/>
     <script src="/js/menu.js"></script>
@@ -31,8 +30,32 @@
         font-weight: bold !important;
       }
 
+      #rctable_filter input{
+        margin: 0;
+        outline: 0;
+        line-height: 1.21428571em;
+        padding: .67857143em 1em;
+        font-size: 1em;
+        background: #fff;
+        border: 1px solid rgba(34,36,38,.15);
+        color: rgba(0,0,0,.87);
+        border-radius: .28571429rem;
+        -webkit-box-shadow: 0 0 0 0 transparent inset;
+        box-shadow: 0 0 0 0 transparent inset;
+        -webkit-transition: color .1s ease,border-color .1s ease;
+        transition: color .1s ease,border-color .1s ease;
+        
+      }
+      #rctable_filter{padding: 10px;}
+
       #rctable_wrapper{background: #f9fafb !important;}
       .dataTables_scrollHeadInner .table{border-right: 0px;}
+
+      @media only screen and (max-device-width: 700px) {
+       .dataTables_scrollHead{display: none;}
+       #rctable thead {display: none;}
+       
+      }
       
       
     </style>
@@ -40,10 +63,11 @@
     <script>
       $(document).ready(function () {
 
+        let h= $('.pushable').height()-($(window).width() <=700 ? 105 : 145);
+        
         var table = $('#rctable').DataTable({
-            scrollY:$('.pushable'). height()-130,
+            scrollY: h,
             scrollCollapse: true,
-            
             paging:   false,
             info: false,
             columns: [
@@ -64,7 +88,7 @@
         $('.pagination a').click(function (e) { 
 
           e.preventDefault();
-          console.log($(this).html());
+          //console.log($(this).html());
 
 
           $('.pagination a').removeClass('active');
@@ -79,11 +103,13 @@
               $('.ui.dimmer').dimmer('show');
             }
           }).done(function (result){
+
+            $('.ui.dimmer').dimmer('hide');
               
-            console.log(result.data[0]);
+            //console.log(result.data[0]);
             if(result.status == 200) {
 
-              $('.ui.dimmer').dimmer('hide');
+              
               
               table.clear().draw();
               table.rows.add(result.data).draw();
@@ -111,7 +137,7 @@
 
     <div class="pusher">
       <table id='rctable' class="ui celled padded table" style="width:100%">
-        <thead>
+        <thead >
             <th>SN</th>
             <th>Ration Card Number</th>
             <th>Card Type</th>
@@ -121,6 +147,7 @@
             <th>Mobile</th>
             <th>Address</th>
             <th>Status</th>
+          
         </thead>
         <tbody>
 
@@ -130,7 +157,7 @@
     
     </div>
 
-    <div class="ui bottom fixed inverted pagination menu">
+    <div class="ui bottom fixed inverted pagination menu" style="overflow-x: auto;">
       <a class="active red item">1</a>
         <a class="red item">2</a>
         <a class="red item">3</a>

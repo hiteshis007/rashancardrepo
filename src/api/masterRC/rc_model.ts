@@ -30,7 +30,8 @@ const schema=new Schema({
         type:String
     },
     status:{
-        type:String
+        type:String,
+        default:''
     }
 
 });
