@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"/>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script src="	https://unpkg.com/ejs@3.1.3/ejs.min.js"></script> 
 
     <link rel="stylesheet" href="/css/menu.css"/>
     <script src="/js/menu.js"></script>
@@ -51,57 +52,57 @@
 
     <div class="pusher">
 
+      
+
       <div class="ui middle aligned center grid" >
         
         <div class="row" >
-          <form class="ui form <%= locals.error? 'error':'' %>" action="/register" method="POST" enctype="multipart/form-data">
+          <form class="ui form" enctype="multipart/form-data">
             <div class="ui segments">
               <div class="ui secondary segment">
                 <h1 style="text-align: center;color: #b35718;">Register</h1>
               </div>
+              <div class="error">
+                
+              </div>
               <div class="ui segment">
                 <div class="ui stackable two column grid">
                   <div class="column middle aligned center ">
-                    <div class="field <%= (locals.error && error.profilePic)? 'error':'' %>">
+                    <div class="field">
                       <input type="file" name="profilePic" id='file' style="display: none;" onchange="document.getElementById('img').src = window.URL.createObjectURL(this.files[0])" multiple>
                       <label for="file" style="text-align: center;">
                           <img class="cstm-img" id='img' src="/default-img.png" onerror="this.src='/default-img.png'" >
                       </label>
-                      <%if(locals.error && error.profilePic){%> <div class="ui pointing red basic label"><%= error.profilePic %></div><%}%>
                     </div>
                   </div>
                   <div class="column middle aligned center ">
-                    <div class="field <%= (locals.error && error.mobile)? 'error':'' %>">
+                    <div class="field">
                       <div class="ui left icon large input">
                           <i class="mobile icon"></i>
                           <input type="text" name="mobile" placeholder="Mobile number" value='<%= user.mobile %>'>
                       </div>
-                      <%if(locals.error && error.mobile){%> <div class="ui pointing red basic label"><%= error.mobile %></div><%}%>
                     </div>
-                    <div class="field <%= (locals.error && error.name)? 'error':'' %>">
+                    <div class="field">
                       <div class="ui left icon large input">
                           <i class="user icon"></i>
                           <input type="text" name="name" placeholder="Name"   value='<%= user.name %>'>
                       </div>
-                      <%if(locals.error && error.name){%> <div class="ui pointing red basic label"><%= error.name %></div><%}%>
                     </div>
                   </div>
                 </div>
                 <div class="ui stackable grid">
                   <div class="column">
-                    <div class="field <%= (locals.error && error.password)? 'error':'' %>">
+                    <div class="field">
                       <div class="ui left icon large input">
                           <i class="lock icon"></i>
                           <input type="password" name="password" placeholder="Password">
                       </div>
-                      <%if(locals.error && error.password){%> <div class="ui pointing red basic label"><%= error.password %></div><%}%>
                     </div>
-                    <div class="field <%= (locals.error && error.rePassword)? 'error':'' %>">
+                    <div class="field">
                       <div class="ui left icon large input">
                           <i class="lock icon"></i>
                           <input type="password" name="rePassword" placeholder="Re-password">
                       </div>
-                      <%if(locals.error && error.rePassword){%> <div class="ui pointing red basic label"><%= error.rePassword %></div><%}%>
                     </div>
                   </div>
                 </div>
@@ -110,7 +111,7 @@
                 <div class="ui right floated buttons">
                   <a class="ui button negative" href="/home">Cancel</a>
                   <div class="or"></div>
-                  <button class="ui positive button">Register</button>
+                  <button class="ui positive button register">Register</button>
                 </div>
               </div>
               <div class="ui secondary segment">
@@ -130,17 +131,85 @@
       <div class="ui text loader">Loading</div>
     </div>
 
+    <div class="ui modal">
+      <div class="content">
+        <div class="ui indicating progress">
+            <div class="bar"></div>
+            <div class="label">0% uploading...</div>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="ui cancel red button">Close</div>
+      </div>
+    </div>
+
 
     <script>
       $( document ).ready(function() {
+
           $("input, select").change(function(){
               $(this).closest('.field').find('.label').remove();
               $(this).closest('.field').removeClass('error');
           });
 
           $('form button').click(function (e) { 
-            $('.ui.dimmer').dimmer('show');
+            //$('.ui.dimmer').dimmer('show');
         });   
+
+        $(document).on("submit", "form", function(e){
+          e.preventDefault();
+          console.log('Upload calling!!!');
+          $.ajax({
+            url: '/register',
+            method: 'post',
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            xhr: function () {
+              var xhr = new XMLHttpRequest();
+              $('.ui.modal').modal('show');
+
+              // Add progress event listener to the upload.
+              xhr.upload.addEventListener('progress', function (event) {
+                  if (event.lengthComputable) {
+                    var percent = (event.loaded / event.total) * 100;
+                    console.log(parseInt(percent));
+                    $('.ui.modal .bar').width(parseInt(percent) + '%');
+                    $('.ui.modal .label').html(percent + '% uploading...');
+                  }
+              });
+
+              return xhr;
+            }
+          }).done(function (data){
+              //console.log(JSON.stringify(data));
+              $('.ui.modal .label').html('Files uploaded successfully ...');
+              $('.ui.modal').modal('hide');
+
+              if(data.statusCode == 400){
+                $.each( data.error, function( field, eMsg ) {
+                  //console.log( field + ": " + eMsg );
+                  $( "input[name='"+field+"']" ).closest('.field').find('.label').remove()
+                  $( "input[name='"+field+"']" ).closest('.field').append('<div class="ui pointing red basic label">'+eMsg+'</div>');
+                });
+              }
+              if(data.statusCode == 500){
+                $('.error').html("<div class='ui negative message segment'><div class='header'>"+data.error+"</div></div>");
+              }
+
+              if(data.statusCode == 200){
+                window.location.href='/login';
+              }
+            
+          }).fail(function (xhr, status) {
+                //alert(status);
+                $('.ui.modal').modal('hide');
+                $('.error').html("<div class='ui negative message segment'><div class='header'>"+status+"</div></div>");
+
+          });
+        });  
+
+            
           
       });
     </script>

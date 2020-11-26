@@ -25,7 +25,7 @@ class RegisterRoute {
         check('name')
             .notEmpty().withMessage('First name is required !'),
         check('mobile')
-            .notEmpty().withMessage('Email is required !')
+            .notEmpty().withMessage('Mobile is required !')
             .isMobilePhone('en-IN').withMessage('Enter valid mobile number !')
             .custom(async (mobile, {req}) => {
                 let result = await RegisterController.isUserRegistered(mobile);
@@ -38,6 +38,8 @@ class RegisterRoute {
             .custom((value, { req }) => value === req.body.password).withMessage('Re-password field must have the same value as the password field'),
         check('profilePic')
             .custom((value, {req}) => req.files.length > 0).withMessage('Profile pic is required !')
+            .custom((value, {req})=>  ['image/jpg', 'image/JPG', 'image/jpeg'].includes(req.files[0].mimetype) ).withMessage('Please select only *jpg !!!')
+            .custom((value, {req})=> req.files[0].size < 100*1024 ).withMessage('Image size is more then 100 KB !!!')
     ];
 
     

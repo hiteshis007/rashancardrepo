@@ -40,26 +40,43 @@ class RegisterController {
             try {
                 regModel = new reg_model_1.default(req.body);
                 if (req.files.length > 0) {
+                    //logger.log(req.files[0]);
                     let bs = "data:" + req.files[0].mimetype + ";base64, " + req.files[0].buffer.toString('base64');
                     regModel.profilePic.data = bs;
                     regModel.profilePic.contentType = req.files[0].mimetype;
                 }
-                logger_1.default.log(req.files[0]);
+                //logger.log(req.files[0])
+                //logger.log('register : ', regModel);
                 let vErrors = validator_1.default(req);
                 if (vErrors.isEmpty()) {
                     //logger.log('register : ', regModel);
                     let result = yield regModel.save();
                     logger_1.default.log('register : ', 'User saved successfully !!');
-                    res.redirect('/home');
+                    res.send({
+                        message: 'User saved successfully !!',
+                        statusCode: 200,
+                        redirect: '/home'
+                    });
                 }
                 else {
                     logger_1.default.info('register : ', vErrors.mapped());
-                    res.render('register', { user: regModel, error: vErrors.mapped() });
+                    regModel.profilePic = '';
+                    res.send({
+                        message: 'Some form filling error occurred !!',
+                        statusCode: 400,
+                        data: regModel,
+                        error: vErrors.mapped()
+                    });
                 }
             }
             catch (error) {
                 logger_1.default.info('register catch : ', error);
-                res.render('register', { user: new reg_model_1.default(), error: { error: 'Could not register user! Some server side error occurred!!' } });
+                res.send({
+                    message: 'Could not register user! Some server side error occurred !!',
+                    statusCode: 500,
+                    data: new reg_model_1.default(),
+                    error: error
+                });
             }
         });
     }

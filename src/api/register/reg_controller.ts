@@ -35,11 +35,13 @@ export default class RegisterController {
 
             regModel = new RegModel(req.body);
             if(req.files.length>0){
+                //logger.log(req.files[0]);
                 let bs = "data:"+req.files[0].mimetype+";base64, "+req.files[0].buffer.toString('base64');
                 regModel.profilePic.data=bs;
                 regModel.profilePic.contentType=req.files[0].mimetype;
             }
-            logger.log(req.files[0])
+            //logger.log(req.files[0])
+            //logger.log('register : ', regModel);
 
             let vErrors = validation(req);
             if(vErrors.isEmpty()){
@@ -47,19 +49,34 @@ export default class RegisterController {
                 //logger.log('register : ', regModel);
                 let result = await regModel.save();
                 logger.log('register : ', 'User saved successfully !!');
-                res.redirect('/home');
+                res.send({
+                    message: 'User saved successfully !!',
+                    statusCode: 200,
+                    redirect: '/home'
+                });
             
             } else {
 
                 logger.info('register : ',vErrors.mapped());
-                res.render('register', {user:regModel, error:vErrors.mapped()});
+                regModel.profilePic = '';
+                res.send({
+                    message: 'Some form filling error occurred !!',
+                    statusCode: 400,
+                    data:regModel,
+                    error:vErrors.mapped()
+                });
 
             }
             
         } catch (error) {
 
             logger.info('register catch : ', error);
-            res.render('register', {user:new RegModel(), error:{error:'Could not register user! Some server side error occurred!!'}});
+            res.send({
+                message: 'Could not register user! Some server side error occurred !!',
+                statusCode: 500,
+                data:new RegModel(),
+                error:error
+            });
 
         }
     
