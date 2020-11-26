@@ -175,7 +175,7 @@
                     var percent = (event.loaded / event.total) * 100;
                     console.log(parseInt(percent));
                     $('.ui.modal .bar').width(parseInt(percent) + '%');
-                    $('.ui.modal .label').html(percent + '% uploading...');
+                    $('.ui.modal .label').html(parseInt(percent) + '% uploading registration...');
                   }
               });
 
